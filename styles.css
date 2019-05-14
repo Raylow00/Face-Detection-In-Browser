@@ -1,0 +1,43 @@
+#overlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+canvas{
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+#inputImg{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+  @media only screen and (max-width : 992px) {
+  #overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+  canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+  #inputImg{
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  }
+  

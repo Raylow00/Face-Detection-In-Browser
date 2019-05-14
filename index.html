@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="face-api.js"></script>
+  <!--<script src="commons.js"></script>
+  <script src="faceDetectionControls.js"></script>
+  <script src="imageSelectionControls.js"></script>-->
+  <link rel="stylesheet" href="styles.css">
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css">-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>-->
+</head>
+<body>
+  
+
+    
+    <div>
+        <img id="myImg" src="" >
+        <canvas id='overlay' style="display: none;"></canvas>
+    </div>
+    <form id='submitform'>
+        <input id="myFileUpload" type="file" onchange="uploadImage()" accept=".jpg, .jpeg, .png">
+    </form>
+    
+    <button id="detect">Detect</button>
+    
+    
+
+  </body>
+  <script>
+      async function uploadImage() {
+        var imgFile = document.getElementById('myFileUpload').files[0]
+        // create an HTMLImageElement from a Blob
+        const img = await faceapi.bufferToImage(imgFile)
+        var myImg = document.getElementById('myImg');
+        myImg.style.display = 'block';
+        document.getElementById('myImg').src = img.src
+      }
+
+    async function loadAndDetect() {
+      console.log("Loading models and getting input");
+      await faceapi.nets.ssdMobilenetv1.loadFromUri('/models')
+      console.log("Done loading models");
+      var options = new faceapi.SsdMobilenetv1Options(0.5)
+      const inputImgEl = $('#myImg').get(0)
+      console.log("Detecting");
+      const results = await faceapi.detectAllFaces(inputImgEl, options)
+      
+      const overlay = document.querySelector('#overlay');
+      console.log("Matching");
+      faceapi.matchDimensions(overlay, inputImgEl)
+      
+      console.log("Drawing boxes");
+      const resizedResults = faceapi.resizeResults(results, inputImgEl)
+      faceapi.draw.drawDetections(overlay, resizedResults);
+      
+      faceapi.draw.drawFaceLandmarks(overlay, resizedResults);
+      console.log("Face landmarks drawn");
+}
+    var submitform = document.querySelector("#submitform");
+    document.querySelector("#detect").addEventListener("click", e=>{
+      submitform.style.display = 'none';
+      document.querySelector("#overlay").style.display = 'block';
+      loadAndDetect();
+    })
+
+    
+  </script>
+
+  
+</body>
+</html>
